@@ -30,11 +30,23 @@ public class TransferOperation implements EventOperation {
 
     @Override
     public ResponseEntity<EventOut> doOperation(final EventIn eventIn) {
-        var maybeOriginAccount = accountService.getAccountById(eventIn.getOrigin());
+        var originAccount = accountService.getAccountById(eventIn.getOrigin());
 
-        accountService.verifyAccount(maybeOriginAccount, eventIn.getOrigin());
+        accountService.verifyAccount(originAccount, eventIn.getOrigin());
 
-        return null;
+        withdrawOperation.doOperation(eventIn);
+
+        depositOperation.doOperation(eventIn);
+
+        var destinationAccount = accountService.getAccountById(eventIn.getDestination());
+
+        var result = new EventOut();
+
+        result.setDestination(destinationAccount);
+
+        result.setOrigin(originAccount);
+
+        return ResponseEntity.created(null).body(result);
     }
 
 }

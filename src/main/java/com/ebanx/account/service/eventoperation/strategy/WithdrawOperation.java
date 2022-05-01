@@ -29,9 +29,9 @@ public class WithdrawOperation implements EventOperation {
 
     @Override
     public ResponseEntity<EventOut> doOperation(EventIn eventIn) {
-        var account = accountService.getAccountById(eventIn.getDestination());
+        var account = accountService.getAccountById(eventIn.getOrigin());
 
-        accountService.verifyAccount(account, account.getId());
+        accountService.verifyAccount(account, eventIn.getOrigin());
 
         var newBalance = newBalance(account.getBalance(), eventIn.getAmount());
 

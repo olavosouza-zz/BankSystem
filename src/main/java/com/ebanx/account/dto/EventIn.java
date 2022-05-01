@@ -16,7 +16,6 @@ public class EventIn {
     @NotNull
     private EventType type;
 
-    @NotBlank
     private String destination;
 
     private String origin;
