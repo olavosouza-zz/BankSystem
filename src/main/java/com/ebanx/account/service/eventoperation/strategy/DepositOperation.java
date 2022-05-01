@@ -2,12 +2,12 @@ package com.ebanx.account.service.eventoperation.strategy;
 
 import com.ebanx.account.dto.EventIn;
 import com.ebanx.account.dto.EventOut;
-import com.ebanx.account.dto.TransactionOut;
 import com.ebanx.account.enums.EventType;
 import com.ebanx.account.model.Account;
 import com.ebanx.account.service.AccountService;
 import com.ebanx.account.service.eventoperation.EventOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ public class DepositOperation implements EventOperation {
     }
 
     @Override
-    public EventOut doOperation(EventIn eventIn) {
+    public ResponseEntity<EventOut> doOperation(EventIn eventIn) {
         var account = accountService.getAccountById(eventIn.getDestination());
 
         if (account == null) {
@@ -37,7 +37,11 @@ public class DepositOperation implements EventOperation {
             deposit(account, eventIn.getAmount());
         }
 
-        return new TransactionOut(account.getId(), account.getBalance());
+        var result = new EventOut();
+
+        result.setDestination(account);
+
+        return ResponseEntity.created(null).body(result);
     }
 
     private void deposit(final Account account, final BigDecimal amountToOperate) {

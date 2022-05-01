@@ -8,6 +8,11 @@ import java.math.BigDecimal;
 
 public class EventIn {
 
+    public EventIn(String destination, BigDecimal amount) {
+        this.destination = destination;
+        this.amount = amount;
+    }
+
     @NotNull
     private EventType type;
 
