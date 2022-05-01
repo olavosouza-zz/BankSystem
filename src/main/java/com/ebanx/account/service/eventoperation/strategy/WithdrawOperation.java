@@ -4,9 +4,7 @@ import com.ebanx.account.dto.EventIn;
 import com.ebanx.account.dto.EventOut;
 import com.ebanx.account.dto.TransactionOut;
 import com.ebanx.account.enums.EventType;
-import com.ebanx.account.exception.AccountNotFoundException;
 import com.ebanx.account.exception.InsufficientFundsException;
-import com.ebanx.account.model.Account;
 import com.ebanx.account.service.AccountService;
 import com.ebanx.account.service.eventoperation.EventOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class WithdrawOperation implements EventOperation {
     public EventOut doOperation(EventIn eventIn) {
         var account = accountService.getAccountById(eventIn.getDestination());
 
-        verifyAccount(account, account.getId());
+        accountService.verifyAccount(account, account.getId());
 
         var newBalance = newBalance(account.getBalance(), eventIn.getAmount());
 
@@ -42,12 +40,6 @@ public class WithdrawOperation implements EventOperation {
         account.setBalance(newBalance);
 
         return new TransactionOut(account.getId(), account.getBalance());
-    }
-
-    private void verifyAccount(final Account account, String accountId) {
-        if (account == null) {
-            throw new AccountNotFoundException(accountId);
-        }
     }
 
     private void verifyBalance(BigDecimal newBalance, String id) {

@@ -1,5 +1,6 @@
 package com.ebanx.account.service;
 
+import com.ebanx.account.exception.AccountNotFoundException;
 import com.ebanx.account.model.Account;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,17 @@ public class AccountService {
     }
 
     public BigDecimal getBalance(final String accountId) {
-        return getAccountById(accountId).getBalance();
+        var account = getAccountById(accountId);
+
+        verifyAccount(account, accountId);
+
+        return account.getBalance();
+    }
+
+    public void verifyAccount(final Account account, String accountId) {
+        if (account == null) {
+            throw new AccountNotFoundException(accountId);
+        }
     }
 
     public void resetAccounts() {
