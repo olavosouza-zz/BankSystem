@@ -1,7 +1,8 @@
 package com.ebanx.account.controller;
 
 import com.ebanx.account.dto.EventIn;
-import com.ebanx.account.service.OperationFactory;
+import com.ebanx.account.dto.EventOut;
+import com.ebanx.account.service.eventoperation.OperationFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +21,8 @@ public class EventController {
     }
 
     @PostMapping("/event")
-    public void addEvent(@RequestBody @Valid EventIn eventIn) {
-        operationFactory.getOperationByEvent(eventIn.getType()).doOperation(eventIn);
+    public EventOut addEvent(@RequestBody @Valid EventIn eventIn) {
+        return operationFactory.getOperationByEvent(eventIn.getType()).doOperation(eventIn);
     }
 
 }

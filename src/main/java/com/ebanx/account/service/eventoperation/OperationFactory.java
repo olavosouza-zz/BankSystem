@@ -1,4 +1,4 @@
-package com.ebanx.account.service;
+package com.ebanx.account.service.eventoperation;
 
 import com.ebanx.account.enums.EventType;
 import com.ebanx.account.exception.StrategyNotImplementedException;
